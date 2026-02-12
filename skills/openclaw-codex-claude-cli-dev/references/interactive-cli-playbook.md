@@ -112,7 +112,18 @@ claude -p "Are there any security issues in this diff?" \
   --output-format json --json-schema '{"type":"object","properties":{"issues":{"type":"array"}}}'
 ```
 
-## 8) Completion checklist
+## 8) Headless mode (-p) output buffering
+
+When running `claude -p` in headless mode with PTY:
+- Terminal output is often **heavily buffered** — stdout may show nothing for minutes
+- The process IS working: check **file system changes** (`find ... -newer`) to confirm progress
+- Use `ps aux | grep claude` to verify CPU/memory activity
+- Do NOT kill based on "no output" alone — always check filesystem first
+- This is especially true with thinking models (Opus 4.6) which have longer initial response times
+
+**Best practice:** Monitor via `find <workdir> -newer <sentinel-file> -type f` rather than relying on stdout polling.
+
+## 9) Completion checklist
 
 - [ ] Required files exist
 - [ ] grep finds expected key text/features
